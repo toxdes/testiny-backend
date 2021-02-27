@@ -1,9 +1,14 @@
-import { generateToken } from "./helpers";
-import { app, prisma, okay } from "../server";
+import { generateToken, isEmpty, err } from "../server/helpers";
+import { app, prisma } from "../server";
+import { okay } from "../server/helpers";
 
 app.post("/login", async (req, res) => {
-  console.log(req.body);
   okay(async () => {
+    let bad = isEmpty("any", [req.body.username, req.body.password]);
+    if (bad) {
+      res.status(400).send(err("Unexpected input, please apologize."));
+      return;
+    }
     const user = await prisma.user.findFirst({
       where: {
         username: req.body.username,

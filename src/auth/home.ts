@@ -1,4 +1,6 @@
-import { app, prisma, okay } from "../server";
+import { app, prisma } from "../server";
+import { okay } from "../server/helpers";
+
 app.get("/", (req, res) => {
   okay(async () => {
     // await prisma.user.create({
