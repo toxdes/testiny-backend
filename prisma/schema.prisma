@@ -1,0 +1,95 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+///
+model UserProfile {
+  id     Int     @id @default(autoincrement())
+  name   String? @db.VarChar(255)
+  bio    String?
+  userId Int     @unique
+  user   User    @relation(fields: [userId], references: [id])
+
+  @@map("user_profiles")
+}
+
+model User {
+  id                  Int                   @id @default(autoincrement())
+  email               String                @unique @db.VarChar(255)
+  username            String                @unique @db.VarChar(255)
+  uuid                String                @unique
+  email_verified      Boolean               @default(false)
+  password            String                @db.VarChar(255)
+  AllowedUsersForExam AllowedUsersForExam[]
+  Exam                Exam[]
+  profile             UserProfile?
+
+  @@map("users")
+}
+
+model Following {
+  id       Int @id @default(autoincrement())
+  userId_a Int
+  userId_b Int
+
+  @@unique([userId_a, userId_b], name: "follower_following_unique")
+  @@map("following")
+}
+
+///
+model Question {
+  id             Int      @id @default(autoincrement())
+  questionId     String   @unique @db.VarChar(255)
+  questionText   String
+  type           String
+  choices        String[]
+  correctMarks   Float
+  incorrectMarks Float
+  sectionId      Int?
+  Section        Section? @relation(fields: [sectionId], references: [id])
+}
+
+model Subject {
+  id     Int    @id @default(autoincrement())
+  name   String
+  examId Int?
+  Exam   Exam?  @relation(fields: [examId], references: [id])
+}
+
+model Section {
+  id        Int        @id @default(autoincrement())
+  name      String
+  examId    Int?
+  Exam      Exam?      @relation(fields: [examId], references: [id])
+  questions Question[]
+}
+
+model Exam {
+  id                  Int                  @id @default(autoincrement())
+  examId              String               @unique @db.VarChar(255)
+  examName            String
+  examDesc            String?
+  subjectId           Int[]
+  duration            String
+  availableTo         String[]
+  calculatorAllowed   Boolean
+  userId              Int
+  author              User                 @relation(fields: [userId], references: [id])
+  AllowedUsersForExam AllowedUsersForExam?
+  sections            Section[]
+  subjects            Subject[]
+}
+
+model AllowedUsersForExam {
+  id       Int    @id @default(autoincrement())
+  userId   Int
+  examId   Int    @unique
+  password String @db.VarChar
+  exam     Exam   @relation(fields: [examId], references: [id])
+  user     User   @relation(fields: [userId], references: [id])
+}

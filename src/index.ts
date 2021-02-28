@@ -1,12 +1,6 @@
-import express from "express";
-import {PORT} from './config/constants';
+import { PORT } from "./config/constants";
+import { app } from "./server/index";
 
-const app = express();
-
-app.get('/', (req, res) =>{
-    res.send('Hello, world!');
+app.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}`);
 });
-
-app.listen(PORT, ()=>{
-    console.log(`Server running at http://localhost:${PORT}`);
-})
