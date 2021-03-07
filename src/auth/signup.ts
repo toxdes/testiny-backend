@@ -12,21 +12,21 @@ app.post("/signup", (req, res) => {
       const salt = await bcrypt.genSalt(SALT_ROUNDS);
       let bad =
         isEmpty("any", [
-          req.body.username,
-          req.body.email,
-          req.body.password,
+          req.body?.data?.username,
+          req.body?.data?.email,
+          req.body?.data?.password,
         ]) ||
-        !validator.isEmail(req.body.email) ||
-        !isUsername(req.body.username);
-      const hashedPassword = await bcrypt.hash(req.body.password, salt);
+        !validator.isEmail(req.body?.data?.email) ||
+        !isUsername(req.body?.data?.username);
+      const hashedPassword = await bcrypt.hash(req.body?.data?.password, salt);
       if (bad) {
         res.status(400).send(err("Unexpected input, please apologize."));
         return;
       }
       const user = await prisma.user.create({
         data: {
-          username: req.body.username,
-          email: req.body.email,
+          username: req.body?.data?.username,
+          email: req.body?.data?.email,
           uuid: uuidv4(),
           password: hashedPassword,
         },
