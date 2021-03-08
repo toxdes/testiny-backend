@@ -20,7 +20,7 @@ app.post("/signup", (req, res) => {
         !isUsername(req.body?.data?.username);
       const hashedPassword = await bcrypt.hash(req.body?.data?.password, salt);
       if (bad) {
-        res.status(400).send(err("Unexpected input, please apologize."));
+        res.send(err("Unexpected input, please apologize."));
         return;
       }
       const user = await prisma.user.create({
@@ -44,13 +44,11 @@ app.post("/signup", (req, res) => {
       );
     } catch (error) {
       if (error.code && error.code === "P2002") {
-        res
-          .status(400)
-          .send(
-            err(`${error.meta.target} not available/already exists.`, error)
-          );
+        res.send(
+          err(`${error.meta.target} not available/already exists.`, error)
+        );
       } else {
-        res.status(400).send(err("cannot create user. ", error));
+        res.send(err("cannot create user. ", error));
       }
       return;
     }

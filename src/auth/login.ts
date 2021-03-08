@@ -11,7 +11,7 @@ app.post("/login", async (req, res) => {
     let bad = isEmpty("any", [username, password]);
     if (bad) {
       console.log("something is empty.");
-      res.status(400).send(err("Unexpected input, please apologize."));
+      res.send(err("Unexpected input, please apologize."));
       return;
     }
     let user;
@@ -29,7 +29,7 @@ app.post("/login", async (req, res) => {
       });
     }
     if (!user) {
-      res.status(401).send(err("Username/password is wrong."));
+      res.send(err("Username/password is wrong."));
       return;
     }
     const passwordOkay = await bcrypt.compare(
@@ -37,7 +37,7 @@ app.post("/login", async (req, res) => {
       user?.password
     );
     if (!passwordOkay) {
-      res.status(401).send(err("Username/password is wrong."));
+      res.send(err("Username/password is wrong."));
       return;
     }
     res.status(200).send(

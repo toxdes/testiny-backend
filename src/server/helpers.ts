@@ -44,7 +44,7 @@ export const authenticateToken = (
   }
   jwt.verify(token, JWT_SECRET, (error, userId) => {
     if (error) {
-      return res.status(401).send(err("invalid token")).end();
+      return res.send(err("invalid token")).end();
     }
     (req as any).userId = userId;
     next();

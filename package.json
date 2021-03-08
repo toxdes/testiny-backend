@@ -12,7 +12,8 @@
     "clean": "bash scripts/clean-db.sh",
     "initdb": "sudo systemctl start postgresql.service",
     "gen": "npx prisma db push --preview-feature && npx prisma generate",
-    "studio": "npx prisma studio &"
+    "studio": "npx prisma studio &",
+    "all": "yarn initdb && yarn gen && yarn dev"
   },
   "devDependencies": {
     "@tsconfig/recommended": "^1.0.1",
