@@ -44,7 +44,7 @@ export const authenticateToken = (
   }
   jwt.verify(token, JWT_SECRET, (error, userId) => {
     if (error) {
-      return res.status(401).send(err("invalid token")).end();
+      return res.send(err("invalid token")).end();
     }
     (req as any).userId = userId;
     next();
@@ -65,12 +65,20 @@ export const isUsername = (input?: string) => {
   return /^[A-Za-z0-9_]+$/.test(input);
 };
 
-export const isEmpty = (selector: string, fields: string[]) => {
+export const isEmpty = (selector: string, fields: (string | undefined)[]) => {
   if (selector === "any") {
-    return fields?.some((f) => validator.isEmpty(f));
+    return fields?.some((f) => {
+      return !f || validator.isEmpty(f);
+    });
   }
   if (selector === "all") {
-    return fields?.every((f) => validator.isEmpty(f));
+    return fields?.every((f) => {
+      return !f || validator.isEmpty(f);
+    });
   }
   return true;
+};
+
+export const isEmail = (a: string | undefined) => {
+  return a && validator.isEmail(a);
 };
