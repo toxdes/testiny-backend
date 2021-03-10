@@ -30,6 +30,8 @@ export const err = (message: string, extraOptions?: any) => {
   });
 };
 
+// checks if token is valid and if it is, then finds the user corresponding to it
+// and attaches the corresponding user details as `req.me`.
 export const authenticateToken = (
   req: Request,
   res: Response,
@@ -42,11 +44,17 @@ export const authenticateToken = (
     next();
     return;
   }
-  jwt.verify(token, JWT_SECRET, (error, userId) => {
+  jwt.verify(token, JWT_SECRET, async (error, userId) => {
     if (error) {
       return res.send(err("invalid token")).end();
     }
-    (req as any).userId = userId;
+    const user = await prisma.user.findUnique({
+      where: {
+        uuid: userId?.toString(),
+      },
+    });
+    if (!user) (req as any).me = null;
+    else (req as any).me = user;
     next();
   });
 };
@@ -81,4 +89,20 @@ export const isEmpty = (selector: string, fields: (string | undefined)[]) => {
 
 export const isEmail = (a: string | undefined) => {
   return a && validator.isEmail(a);
+};
+
+// filter object according to set of valid keys
+export const getValidFields = (validKeys: string[], fromObject: any) => {
+  if (validKeys?.length === 0) return {};
+  if (!fromObject) return {};
+  const keys = Object.keys(fromObject);
+  if (keys?.length === 0) return {};
+  let res: any = {};
+
+  keys.forEach((key) => {
+    if (validKeys.some((kk) => kk === key)) {
+      res[key] = fromObject[key];
+    }
+  });
+  return res;
 };

@@ -1,1 +1,1 @@
-import "./me";
+import "./profile";

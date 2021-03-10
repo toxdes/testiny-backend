@@ -12,6 +12,7 @@ model UserProfile {
   id     Int     @id @default(autoincrement())
   name   String? @db.VarChar(255)
   bio    String?
+  avatar String?
   userId Int     @unique
   user   User    @relation(fields: [userId], references: [id])
 
