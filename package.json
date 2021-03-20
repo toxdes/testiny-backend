@@ -9,7 +9,8 @@
   "private": true,
   "scripts": {
     "dev": "nodemon src/index.ts",
-    "start": "yarn gen && ts-node src/index.ts",
+    "build":"npx tsc",
+    "start": "yarn gen && node dist/index.js",
     "clean": "bash scripts/clean-db.sh",
     "initdb": "sudo systemctl start postgresql.service",
     "gen": "npx prisma db push --preview-feature && npx prisma generate",
