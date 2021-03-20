@@ -2,6 +2,8 @@ A backend for [testiny-web](https://github.com/toxdes/testiny-web).
 
 # Quickstart
 
+#### 1. Local Server
+
 Clone this repo.
 
 ```sh
@@ -9,6 +11,19 @@ $ npm i -g yarn # install yarn
 $ # make sure you have set up postgres, and have DATABASE_URL in .env
 $ yarn all # ckeckout package.json to know what it does
 ```
+
+#### 2. Heroku
+
+1. Install [`heroku-cli`](https://devcenter.heroku.com/articles/heroku-cli)
+2. Do `heroku login` inside the project directory, and login.
+3. Create a NodeJS app from the heroku dashboard, and a new postgresql database, and grab the URL.([How to](https://devcenter.heroku.com/articles/heroku-postgresql#provisioning-heroku-postgres))
+4. Set following required environment variables ([How To](https://devcenter.heroku.com/articles/config-vars)).
+
+   | Environment Variable Name | Value                                   |
+   | ------------------------- | --------------------------------------- |
+   | `ENV`                     | `production`                            |
+   | `JWT_SECRET`              | `something_unguessable_secret_key_here` |
+   | `PROD_DATABASE_URL`       | `database_url_from_previous_step`       |
 
 # Tech stack
 
