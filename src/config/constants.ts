@@ -11,7 +11,7 @@ let PORT: number,
 // salt rounds for bcrypt
 SALT_ROUNDS = 12;
 // default port
-PORT = 8000;
+PORT = Number(process.env.PORT) || 8000;
 
 // editable fields in /editprofile route
 USER_FIELDS_ALLOWED_TO_EDIT = ["name", "bio", "avatar"];
