@@ -1,4 +1,4 @@
-import { app, prisma } from "../server";
+import { app } from "../server";
 import { okay } from "../server/helpers";
 
 app.get("/", (req, res) => {
@@ -15,20 +15,16 @@ app.get("/", (req, res) => {
     // });
     let loggedIn = false;
     console.log();
-    if ((req as any).userId) {
+    if ((req as any).me) {
       // then we are logged in
       loggedIn = true;
     }
-    const allUsers = await prisma.user.findMany({
-      include: {
-        profile: true,
-      },
-    });
-    res.setHeader("Content-Type", "application/json");
     res.send(
       JSON.stringify({
         loggedIn,
-        users: loggedIn ? allUsers : "you are not logged in",
+        users: loggedIn
+          ? "bruh, you are logged in bro."
+          : "you are not logged in",
       })
     );
   });
