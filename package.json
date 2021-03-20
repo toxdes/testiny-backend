@@ -10,7 +10,7 @@
   "scripts": {
     "dev": "nodemon src/index.ts",
     "build":"npx tsc",
-    "start": "yarn gen && node dist/index.js",
+    "start": "node dist/index.js",
     "clean": "bash scripts/clean-db.sh",
     "initdb": "sudo systemctl start postgresql.service",
     "gen": "npx prisma db push --preview-feature && npx prisma generate",
