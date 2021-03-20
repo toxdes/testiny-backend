@@ -1,5 +1,11 @@
 A backend for [testiny-web](https://github.com/toxdes/testiny-web).
 
+#### Note
+
+Currently, this backend is deployed at: https://testiny-backend.herokuapp.com.
+
+However, if you still can't access it, then it means the free tier dynos are already consumed.
+
 # Quickstart
 
 #### 1. Local Server
