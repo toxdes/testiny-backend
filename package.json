@@ -5,6 +5,7 @@
   "main": "index.js",
   "repository": "https://github.com/toxdes/testiny-backend.git",
   "author": "toxicdesire",
+  "type":"module",
   "license": "MIT",
   "private": true,
   "scripts": {
