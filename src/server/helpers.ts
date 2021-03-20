@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import validator from "validator";
 
-import { JWT_SECRET } from "../config/constants";
+import { JWT_SECRET, ARTIFICIAL_DELAY_IN_MILLIS } from "../config/constants";
 import { prisma } from ".";
 
 import { Request, Response } from "express";
@@ -38,6 +38,7 @@ export const authenticateToken = (
   next: () => void
 ) => {
   const header = req.headers["authorization"];
+  console.log(header);
   const token = header?.split(" ")[1];
   if (!token || header?.split(" ")[0] !== "Bearer") {
     (req as any).user = undefined;
@@ -105,4 +106,13 @@ export const getValidFields = (validKeys: string[], fromObject: any) => {
     }
   });
   return res;
+};
+
+// introduce artificial delay while serving requests to simulate real-world situations
+export const delayResponse = (
+  req: Request,
+  res: Response,
+  next: () => void
+) => {
+  setTimeout(next, ARTIFICIAL_DELAY_IN_MILLIS);
 };

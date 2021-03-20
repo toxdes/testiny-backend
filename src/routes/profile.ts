@@ -6,7 +6,7 @@ app.get("/profile/:username", async (req, res) => {
   const target_username = req.params?.username;
   let user, userProfile, myProfile;
   const me = (req as any).me;
-  console.log("target username", target_username);
+  // console.log("target username", target_username);
 
   try {
     user = await prisma.user.findFirst({
@@ -14,7 +14,10 @@ app.get("/profile/:username", async (req, res) => {
         username: target_username,
       },
     });
-    console.log(user);
+    if (!user) {
+      res.send(err("No such user exists."));
+      return;
+    }
     userProfile = await prisma.userProfile.findUnique({
       where: {
         userId: user?.id,
@@ -27,10 +30,6 @@ app.get("/profile/:username", async (req, res) => {
   }
   if (!me) {
     // read only profile, public
-    if (!user) {
-      res.send(err("No such user exists."));
-      return;
-    }
     res.send(
       JSON.stringify({
         username: user.username,
@@ -81,6 +80,7 @@ app.get("/me", async (req, res) => {
     res.send(err("Maybe the token is corrupted, cannot authorize."));
     return;
   }
+  console.log("me", me);
   try {
     let myProfile = await prisma.userProfile.findUnique({
       where: {
