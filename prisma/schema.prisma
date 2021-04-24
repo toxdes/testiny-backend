@@ -20,16 +20,15 @@ model UserProfile {
 }
 
 model User {
-  id                  Int                   @id @default(autoincrement())
-  email               String                @unique @db.VarChar(255)
-  username            String                @unique @db.VarChar(255)
-  uuid                String                @unique
-  email_verified      Boolean               @default(false)
-  password            String                @db.VarChar(255)
-  AllowedUsersForExam AllowedUsersForExam[]
-  Exam                Exam[]
-  profile             UserProfile?
+  id             Int          @id @default(autoincrement())
+  email          String       @unique @db.VarChar(255)
+  username       String       @unique @db.VarChar(255)
+  uuid           String       @unique
+  email_verified Boolean      @default(false)
+  password       String       @db.VarChar(255)
+  profile        UserProfile?
 
+  Question Question[]
   @@map("users")
 }
 
@@ -42,55 +41,27 @@ model Following {
   @@map("following")
 }
 
-///
+enum QuestionType {
+  MCQ
+  MSQ
+  NAT
+}
+
 model Question {
-  id             Int      @id @default(autoincrement())
-  questionId     String   @unique @db.VarChar(255)
-  questionText   String
-  type           String
-  choices        String[]
-  correctMarks   Float
-  incorrectMarks Float
-  sectionId      Int?
-  Section        Section? @relation(fields: [sectionId], references: [id])
+  id            Int            @id @default(autoincrement())
+  questionId    String         @unique @db.VarChar(255)
+  question_type QuestionType
+  text          String
+  visibility    String
+  choices       String[]
+  difficulty    Int
+  QuestionTags  QuestionTags[]
+  author        User           @relation(fields: [userId], references: [id])
+  userId        Int
 }
 
-model Subject {
-  id     Int    @id @default(autoincrement())
-  name   String
-  examId Int?
-  Exam   Exam?  @relation(fields: [examId], references: [id])
-}
-
-model Section {
-  id        Int        @id @default(autoincrement())
-  name      String
-  examId    Int?
-  Exam      Exam?      @relation(fields: [examId], references: [id])
-  questions Question[]
-}
-
-model Exam {
-  id                  Int                  @id @default(autoincrement())
-  examId              String               @unique @db.VarChar(255)
-  examName            String
-  examDesc            String?
-  subjectId           Int[]
-  duration            String
-  availableTo         String[]
-  calculatorAllowed   Boolean
-  userId              Int
-  author              User                 @relation(fields: [userId], references: [id])
-  AllowedUsersForExam AllowedUsersForExam?
-  sections            Section[]
-  subjects            Subject[]
-}
-
-model AllowedUsersForExam {
-  id       Int    @id @default(autoincrement())
-  userId   Int
-  examId   Int    @unique
-  password String @db.VarChar
-  exam     Exam   @relation(fields: [examId], references: [id])
-  user     User   @relation(fields: [userId], references: [id])
+model QuestionTags {
+  id         Int       @id @default(autoincrement())
+  question   Question? @relation(fields: [questionId], references: [id])
+  questionId Int?
 }
