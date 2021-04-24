@@ -33,7 +33,7 @@ app.get("/profile/:username", async (req, res) => {
     res.send(
       JSON.stringify({
         username: user.username,
-        email_verified: user.email_verified,
+        emailVerified: user.emailVerified,
         name: userProfile?.name,
         bio: userProfile?.bio,
         ownProfile: false,
@@ -52,7 +52,7 @@ app.get("/profile/:username", async (req, res) => {
       res.send(
         JSON.stringify({
           username: me?.username,
-          email_verified: me?.email_verified,
+          emailVerified: me?.emailVerified,
           name: myProfile?.name,
           bio: myProfile?.bio,
           ownProfile: true,
@@ -63,7 +63,7 @@ app.get("/profile/:username", async (req, res) => {
       res.send(
         JSON.stringify({
           username: user?.username,
-          email_verified: user?.email_verified,
+          emailVerified: user?.emailVerified,
           name: userProfile?.name,
           bio: userProfile?.bio,
           ownProfile: false,
@@ -90,7 +90,7 @@ app.get("/me", async (req, res) => {
     res.send(
       JSON.stringify({
         username: me.username,
-        email_verified: me.email_verified,
+        emailVerified: me.emailVerified,
         name: myProfile?.name,
         bio: myProfile?.bio,
         ownProfile: true,
@@ -177,7 +177,7 @@ app.get("/users", async (req, res) => {
       "username",
       "profile",
       "email",
-      "email_verified",
+      "emailVerified",
       "uuid",
     ];
     let filteredResult = result.map((rec) => {
