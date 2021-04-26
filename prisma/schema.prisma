@@ -76,4 +76,5 @@ model QuestionTags {
   id         Int       @id @default(autoincrement())
   question   Question? @relation(fields: [questionId], references: [id])
   questionId Int?
+  tagName    String
 }
