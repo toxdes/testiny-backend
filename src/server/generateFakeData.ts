@@ -1,5 +1,7 @@
 import faker from "faker";
 import { prisma } from ".";
+import { SALT_ROUNDS } from "../config/constants";
+import { genSalt, hashSync as hash } from "bcrypt";
 import { License, QuestionVisibility, QuestionType } from "@prisma/client";
 import { v4 as uuid } from "uuid";
 const USERS = 100;
@@ -9,12 +11,14 @@ const getRandom = (arr: any[]) => {
   return arr[Math.floor(Math.random() * arr.length * 10) % arr.length];
 };
 // users
+
 Array.from({ length: USERS }).map(async (_) => {
+  const salt = await genSalt(SALT_ROUNDS);
   let username = faker.internet.userName();
   const user = await prisma.user.create({
     data: {
       username: username,
-      password: username,
+      password: hash(username, salt),
       email: faker.internet.email(),
       emailVerified: getRandom([true, false]),
       uuid: uuid(),

@@ -2,7 +2,7 @@ import { USER_FIELDS_ALLOWED_TO_EDIT } from "./../config/constants";
 import { app, prisma } from "../server";
 import { err, getValidFields } from "../server/helpers";
 
-app.get("/profile/:username", async (req, res) => {
+app.get("/users/:username", async (req, res) => {
   const target_username = req.params?.username;
   let user, userProfile, myProfile;
   const me = (req as any).me;

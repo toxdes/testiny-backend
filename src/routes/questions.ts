@@ -1,6 +1,7 @@
 import { app, prisma } from "../server";
 import { err } from "../server/helpers";
 import { v4 as uuid } from "uuid";
+import { License, QuestionType, QuestionVisibility } from "@prisma/client";
 
 app.get("/questions/:id", async (req, res) => {
   const target_question_id = req.params?.id;
@@ -10,6 +11,20 @@ app.get("/questions/:id", async (req, res) => {
     question = await prisma.question.findUnique({
       where: {
         id: Number(target_question_id),
+      },
+      include: {
+        author: {
+          select: {
+            username: true,
+            profile: {
+              select: {
+                bio: true,
+                avatar: true,
+              },
+            },
+            email: true,
+          },
+        },
       },
     });
     if (!question) {
@@ -26,17 +41,50 @@ app.get("/questions/:id", async (req, res) => {
 
 app.post("/questions/create", async (req, res) => {
   const me = (req as any).me;
-  const data = req.body.data;
-  data.questionId = uuid();
   if (!me) {
     res.send(err("Invalid action, you are not logged in."));
     return;
   }
+  const rawData = req.body.data;
+  let data: any = {};
+  try {
+    data.questionType = QuestionType[rawData.questionType as QuestionType];
+    data.text = rawData.text;
+    data.questionVisibility =
+      QuestionVisibility[rawData.questionVisibility as QuestionVisibility];
+    data.questionId = uuid();
+    data.license = License[rawData.license as License];
+    data.choices = rawData.choices;
+    data.difficulty = rawData.difficulty;
+    data.author = {
+      connect: {
+        id: me.id,
+      },
+    };
+  } catch (e) {
+    console.error(e);
+    res.send(
+      err("Bad request, you haven't provided correct values for some fields.")
+    );
+    return;
+  }
   try {
     let question = await prisma.question.create({
-      ...data,
+      data,
     });
     if (!question) throw new Error("Couldn't create a question.");
+    if (rawData.tags && rawData.tags.length > 0) {
+      await Promise.all(
+        rawData.tags.map(async (tag: string) => {
+          return prisma.questionTags.create({
+            data: {
+              questionId: question.id,
+              tagName: tag,
+            },
+          });
+        })
+      );
+    }
     res.send(JSON.stringify(question));
   } catch (e) {
     console.error(e);

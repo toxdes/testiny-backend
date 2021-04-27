@@ -43,6 +43,7 @@ app.post("/signup", (req, res) => {
         })
       );
     } catch (error) {
+      console.error(error);
       if (error.code && error.code === "P2002") {
         res.send(
           err(`${error.meta.target} not available/already exists.`, error)
