@@ -27,8 +27,8 @@ model User {
   emailVerified Boolean      @default(false)
   password      String       @db.VarChar(255)
   profile       UserProfile?
+  Question      Question[]
 
-  Question Question[]
   @@map("users")
 }
 

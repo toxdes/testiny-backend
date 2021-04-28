@@ -14,7 +14,7 @@
     "clean": "bash scripts/clean-db.sh",
     "initdb": "sudo systemctl start postgresql.service",
     "gen": "npx prisma db push --preview-feature && npx prisma generate",
-    "fake": "ts-node src/server/generateFakeData.ts",
+    "fake": "ts-node scripts/generateFakeData.ts",
     "studio": "npx prisma studio",
     "all": "yarn initdb && yarn gen && yarn dev"
   },
