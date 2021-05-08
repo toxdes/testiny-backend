@@ -37,6 +37,8 @@ app.get("/users/:username", async (req, res) => {
         name: userProfile?.name,
         bio: userProfile?.bio,
         ownProfile: false,
+        createdAt: userProfile?.createdAt,
+        updatedAt: userProfile?.updatedAt,
       })
     );
   } else {
@@ -56,6 +58,8 @@ app.get("/users/:username", async (req, res) => {
           name: myProfile?.name,
           bio: myProfile?.bio,
           ownProfile: true,
+          createdAt: me?.createdAt,
+          updatedAt: me?.updatedAt,
         })
       );
     } else {
@@ -67,6 +71,8 @@ app.get("/users/:username", async (req, res) => {
           name: userProfile?.name,
           bio: userProfile?.bio,
           ownProfile: false,
+          createdAt: user?.createdAt,
+          updatedAt: user?.updatedAt,
         })
       );
     }
@@ -94,6 +100,8 @@ app.get("/me", async (req, res) => {
         name: myProfile?.name,
         bio: myProfile?.bio,
         ownProfile: true,
+        createdAt: me.createdAt,
+        updatedAt: me.updatedAt,
       })
     );
   } catch (e) {
@@ -179,6 +187,8 @@ app.get("/users", async (req, res) => {
       "email",
       "emailVerified",
       "uuid",
+      "createdAt",
+      "updatedAt",
     ];
     let filteredResult = result.map((rec) => {
       let o = {};

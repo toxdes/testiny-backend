@@ -1,20 +1,24 @@
 import { app, prisma } from "../server";
-import { err } from "../server/helpers";
+import { err, fromNow, isUUID } from "../server/helpers";
 import { v4 as uuid } from "uuid";
 import { License, QuestionType, QuestionVisibility } from "@prisma/client";
 
 app.get("/questions/:id", async (req, res) => {
   const target_question_id = req.params?.id;
+  console.log("QID", target_question_id);
   let question;
+  let key = isUUID(target_question_id) ? "questionId" : "id";
   // read only question
   try {
     question = await prisma.question.findUnique({
       where: {
-        id: Number(target_question_id),
+        [key]: key === "id" ? Number(target_question_id) : target_question_id,
       },
       include: {
         author: {
           select: {
+            createdAt: true,
+            updatedAt: true,
             username: true,
             profile: {
               select: {
@@ -25,18 +29,31 @@ app.get("/questions/:id", async (req, res) => {
             email: true,
           },
         },
+        tags: {
+          select: {
+            tagName: true,
+          },
+        },
       },
     });
     if (!question) {
       res.send(err("Invalid question ID."));
       return;
     }
+
+    let resp = {
+      ...question,
+      createdAt: fromNow(question.createdAt),
+      updatedAt: fromNow(question.updatedAt),
+    };
+    console.log(resp);
+
+    res.send(JSON.stringify(resp));
   } catch (e) {
     console.error(e);
     res.send(err("Internal server error, apologies."));
     return;
   }
-  res.send(JSON.stringify(question));
 });
 
 app.post("/questions/create", async (req, res) => {
@@ -118,6 +135,8 @@ app.get("/questions", async (req, res) => {
       "difficulty",
       "tags",
       "author",
+      "createdAt",
+      "updatedAt",
     ];
 
     let filteredResult = result.map((rec) => {
