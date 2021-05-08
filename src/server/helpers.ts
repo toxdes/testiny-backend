@@ -11,6 +11,7 @@ Authentication - Identify who is Using the Application.
 Authorization - What permissions/access does the authenticated user have
 */
 
+// disconnect prisma client when we want to quit
 export const okay = (f: any) => {
   f()
     .catch((e: any) => {
@@ -21,12 +22,23 @@ export const okay = (f: any) => {
     });
 };
 
+// generic error function (decorator) for error responses
 export const err = (message: string, extraOptions?: any) => {
   return JSON.stringify({
     error: true,
     status: "error",
     message: message,
     ...extraOptions,
+  });
+};
+
+// generic (decorator) function for successful responses - (not in use yet)
+export const succ = (message: string, extraOptions?: any) => {
+  return JSON.stringify({
+    error: false,
+    status: "success",
+    message: message,
+    data: extraOptions,
   });
 };
 
