@@ -26,7 +26,7 @@ if (process.env.ENV === "production") {
   DATABASE_URL = process.env.PROD_DATABASE_URL as string;
 } else {
   JWT_SECRET = "super_secret_nuclear_missile_launch_codes";
-  ARTIFICIAL_DELAY_IN_MILLIS = 0;
+  ARTIFICIAL_DELAY_IN_MILLIS = 800;
 }
 
 export {

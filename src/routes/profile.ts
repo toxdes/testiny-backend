@@ -1,6 +1,6 @@
 import { USER_FIELDS_ALLOWED_TO_EDIT } from "./../config/constants";
 import { app, prisma } from "../server";
-import { err, getValidFields } from "../server/helpers";
+import { err, getValidFields, fromNow } from "../server/helpers";
 
 app.get("/users/:username", async (req, res) => {
   const target_username = req.params?.username;
@@ -37,8 +37,8 @@ app.get("/users/:username", async (req, res) => {
         name: userProfile?.name,
         bio: userProfile?.bio,
         ownProfile: false,
-        createdAt: userProfile?.createdAt,
-        updatedAt: userProfile?.updatedAt,
+        createdAt: fromNow(user.createdAt),
+        updatedAt: fromNow(user.updatedAt),
       })
     );
   } else {

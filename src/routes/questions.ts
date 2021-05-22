@@ -121,32 +121,34 @@ app.get("/questions", async (req, res) => {
       skip: skipped,
       take: records,
       include: {
-        author: true,
+        author: {
+          select: {
+            createdAt: true,
+            updatedAt: true,
+            username: true,
+            profile: {
+              select: {
+                bio: true,
+                avatar: true,
+              },
+            },
+            email: true,
+          },
+        },
         tags: true,
       },
     });
-    const allowedKeys = [
-      "questionId",
-      "questionType",
-      "text",
-      "questionVisibility",
-      "license",
-      "choices",
-      "difficulty",
-      "tags",
-      "author",
-      "createdAt",
-      "updatedAt",
-    ];
-
-    let filteredResult = result.map((rec) => {
-      let o = {};
-      Object.keys(rec).forEach((key) => {
-        if (allowedKeys.indexOf(key) > -1) (o as any)[key] = (rec as any)[key];
-      });
-      return o;
+    if (!result) {
+      res.send(err("No questions yet."));
+    }
+    let resp = result.map((rec) => {
+      return {
+        ...rec,
+        createdAt: fromNow(rec.createdAt),
+        updatedAt: fromNow(rec.updatedAt),
+      };
     });
-    res.send(JSON.stringify(filteredResult));
+    res.send(JSON.stringify(resp));
   } catch (e) {
     console.error(e);
     res.end(err("Invalid query. Apologize please."));
