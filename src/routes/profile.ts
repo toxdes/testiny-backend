@@ -100,8 +100,8 @@ app.get("/me", async (req, res) => {
         name: myProfile?.name,
         bio: myProfile?.bio,
         ownProfile: true,
-        createdAt: me.createdAt,
-        updatedAt: me.updatedAt,
+        createdAt: fromNow(me.createdAt),
+        updatedAt: fromNow(me.updatedAt),
       })
     );
   } catch (e) {
