@@ -9,88 +9,95 @@ datasource db {
 
 ///
 model UserProfile {
-  id     Int     @id @default(autoincrement())
-  name   String? @db.VarChar(255)
-  bio    String?
-  avatar String?
-  userId Int     @unique
-  user   User    @relation(fields: [userId], references: [id])
+  id        Int      @id @default(autoincrement())
+  name      String?  @db.VarChar(255)
+  bio       String?
+  avatar    String?
+  userId    Int      @unique
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
 
   @@map("user_profiles")
 }
 
 model User {
-  id                  Int                   @id @default(autoincrement())
-  email               String                @unique @db.VarChar(255)
-  username            String                @unique @db.VarChar(255)
-  uuid                String                @unique
-  email_verified      Boolean               @default(false)
-  password            String                @db.VarChar(255)
-  AllowedUsersForExam AllowedUsersForExam[]
-  Exam                Exam[]
-  profile             UserProfile?
+  id             Int          @id @default(autoincrement())
+  email          String       @unique @db.VarChar(255)
+  username       String       @unique @db.VarChar(255)
+  uuid           String       @unique
+  emailVerified  Boolean      @default(false)
+  password       String       @db.VarChar(255)
+  profile        UserProfile?
+  Question       Question[]
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @default(now())
+  followingCount Int          @default(0)
+  followersCount Int          @default(0)
 
   @@map("users")
 }
 
 model Following {
-  id       Int @id @default(autoincrement())
-  userId_a Int
-  userId_b Int
+  id        Int      @id @default(autoincrement())
+  userIdA   Int
+  userIdB   Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
 
-  @@unique([userId_a, userId_b], name: "follower_following_unique")
+
+  @@unique([userIdA, userIdB], name: "follower_following_unique")
   @@map("following")
 }
 
-///
+enum QuestionType {
+  MCQ
+  MSQ
+  NAT
+}
+
+enum QuestionVisibility {
+  PRIVATE
+  PROTECTED
+  PUBLIC
+}
+
+enum License {
+  FREE
+  NON_FREE
+}
+
 model Question {
-  id             Int      @id @default(autoincrement())
-  questionId     String   @unique @db.VarChar(255)
-  questionText   String
-  type           String
-  choices        String[]
-  correctMarks   Float
-  incorrectMarks Float
-  sectionId      Int?
-  Section        Section? @relation(fields: [sectionId], references: [id])
+  id                 Int                @id @default(autoincrement())
+  questionId         String             @unique @db.VarChar(255)
+  questionType       QuestionType
+  text               String
+  questionVisibility QuestionVisibility
+  license            License
+  choices            String[]
+  difficulty         Int
+  tags               QuestionTags[]
+  author             User               @relation(fields: [userId], references: [id])
+  userId             Int
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @default(now())
+  Answer             Answer[]
 }
 
-model Subject {
-  id     Int    @id @default(autoincrement())
-  name   String
-  examId Int?
-  Exam   Exam?  @relation(fields: [examId], references: [id])
+model Answer {
+  id         Int      @id @default(autoincrement())
+  question   Question @relation(fields: [questionId], references: [id])
+  questionId Int
+  answer     String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now())
 }
 
-model Section {
-  id        Int        @id @default(autoincrement())
-  name      String
-  examId    Int?
-  Exam      Exam?      @relation(fields: [examId], references: [id])
-  questions Question[]
-}
-
-model Exam {
-  id                  Int                  @id @default(autoincrement())
-  examId              String               @unique @db.VarChar(255)
-  examName            String
-  examDesc            String?
-  subjectId           Int[]
-  duration            String
-  availableTo         String[]
-  calculatorAllowed   Boolean
-  userId              Int
-  author              User                 @relation(fields: [userId], references: [id])
-  AllowedUsersForExam AllowedUsersForExam?
-  sections            Section[]
-  subjects            Subject[]
-}
-
-model AllowedUsersForExam {
-  id       Int    @id @default(autoincrement())
-  userId   Int
-  examId   Int    @unique
-  password String @db.VarChar
-  exam     Exam   @relation(fields: [examId], references: [id])
-  user     User   @relation(fields: [userId], references: [id])
+model QuestionTags {
+  id         Int       @id @default(autoincrement())
+  question   Question? @relation(fields: [questionId], references: [id])
+  questionId Int?
+  tagName    String
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @default(now())
 }
