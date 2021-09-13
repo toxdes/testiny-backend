@@ -1,4 +1,4 @@
-![GitHub](https://img.shields.io/github/license/toxdes/testiny-backend?style=for-the-badge)
+![GitHub](https://img.shields.io/github/license/toxdes/testiny-backend?label=LICENSE&style=for-the-badge)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/toxdes/testiny-backend?style=for-the-badge)
 ![Lines of code](https://img.shields.io/tokei/lines/github/toxdes/testiny-backend?style=for-the-badge)
 
