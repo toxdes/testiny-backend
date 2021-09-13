@@ -39,6 +39,9 @@ app.get("/users/:username", async (req, res) => {
         ownProfile: false,
         createdAt: fromNow(user.createdAt),
         updatedAt: fromNow(user.updatedAt),
+        followingCount: user.followingCount,
+        followersCount: user.followersCount,
+        alreadyFollowing: false,
       })
     );
   } else {
@@ -60,10 +63,20 @@ app.get("/users/:username", async (req, res) => {
           ownProfile: true,
           createdAt: me?.createdAt,
           updatedAt: me?.updatedAt,
+          followingCount: user.followingCount,
+          followersCount: user.followersCount,
+          alreadyFollowing: false,
         })
       );
     } else {
       // else user is logged in, but is visiting someone else's profile
+      let alreadyFollowing =
+        (await prisma.following.count({
+          where: {
+            userIdA: me.id,
+            userIdB: user.id,
+          },
+        })) > 0;
       res.send(
         JSON.stringify({
           username: user?.username,
@@ -73,6 +86,9 @@ app.get("/users/:username", async (req, res) => {
           ownProfile: false,
           createdAt: user?.createdAt,
           updatedAt: user?.updatedAt,
+          followingCount: user.followingCount,
+          followersCount: user.followersCount,
+          alreadyFollowing,
         })
       );
     }
@@ -93,6 +109,16 @@ app.get("/me", async (req, res) => {
         userId: me.id,
       },
     });
+    let followingCount = await prisma.following.count({
+      where: {
+        userIdA: me.id,
+      },
+    });
+    let followersCount = await prisma.following.count({
+      where: {
+        userIdB: me.id,
+      },
+    });
     res.send(
       JSON.stringify({
         username: me.username,
@@ -100,13 +126,106 @@ app.get("/me", async (req, res) => {
         name: myProfile?.name,
         bio: myProfile?.bio,
         ownProfile: true,
-        createdAt: me.createdAt,
-        updatedAt: me.updatedAt,
+        createdAt: fromNow(me.createdAt),
+        updatedAt: fromNow(me.updatedAt),
+        followingCount,
+        followersCount,
       })
     );
   } catch (e) {
     console.error(e);
     res.send(err("Internal server error, apologies."));
+  }
+});
+
+app.post("/users/:username/follow", async (req, res) => {
+  const me = (req as any).me;
+  const username = req.params.username;
+  let target;
+  if (!me) {
+    res.send(err("You are not logged in."));
+    return;
+  }
+  try {
+    // check if is already following
+    target = await prisma.user.findFirst({
+      where: {
+        username: username,
+      },
+    });
+    if (!target) {
+      res.send(err("The user you're trying to follow does not exist."));
+      return;
+    }
+    let alreadyExists = await prisma.following.findFirst({
+      where: {
+        userIdA: me.id,
+        userIdB: target.id,
+      },
+    });
+    if (alreadyExists) {
+      // unfollow
+      await prisma.following.delete({
+        where: {
+          id: alreadyExists.id,
+        },
+      });
+      await prisma.user.update({
+        where: {
+          id: me.id,
+        },
+        data: {
+          followingCount: me.followingCount - 1,
+        },
+      });
+      await prisma.user.update({
+        where: {
+          id: target.id,
+        },
+        data: {
+          followersCount: target.followersCount - 1,
+        },
+      });
+      res.send(
+        JSON.stringify({
+          status: "success",
+          message: `You stopped following @${target.username}`,
+        })
+      );
+    } else {
+      await prisma.following.create({
+        data: {
+          userIdA: me.id,
+          userIdB: target.id,
+        },
+      });
+      await prisma.user.update({
+        where: {
+          id: me.id,
+        },
+        data: {
+          followingCount: me.followingCount + 1,
+        },
+      });
+      await prisma.user.update({
+        where: {
+          id: target.id,
+        },
+        data: {
+          followersCount: target.followersCount + 1,
+        },
+      });
+      res.send(
+        JSON.stringify({
+          status: "success",
+          message: `You started following @${target.username}`,
+        })
+      );
+    }
+  } catch (e) {
+    console.error(e);
+    res.send(err("Internal error, apologies."));
+    return;
   }
 });
 
@@ -171,6 +290,7 @@ app.post("/users/:username/edit", async (req, res) => {
 app.get("/users", async (req, res) => {
   try {
     let records = Number(req.query.n);
+    let me = (req as any).me;
     if (!records) records = 20;
     let skipped = Number(req.query.page) * records;
     if (!skipped) skipped = 0;
@@ -189,14 +309,25 @@ app.get("/users", async (req, res) => {
       "uuid",
       "createdAt",
       "updatedAt",
+      "followingCount",
+      "followersCount",
+      "alreadyFollowing",
     ];
-    let filteredResult = result.map((rec) => {
-      let o = {};
-      Object.keys(rec).forEach((key) => {
-        if (allowedKeys.indexOf(key) > -1) (o as any)[key] = (rec as any)[key];
-      });
-      return o;
-    });
+    let filteredResult = await Promise.all(
+      result.map(async (rec) => {
+        let o: Record<string, string | number | boolean> = {};
+        Object.keys(rec).forEach((key) => {
+          if (allowedKeys.indexOf(key) > -1)
+            (o as any)[key] = (rec as any)[key];
+        });
+        o.alreadyFollowing = me
+          ? (await prisma.following.count({
+              where: { userIdA: me.id, userIdB: rec.id },
+            })) > 0
+          : false;
+        return o;
+      })
+    );
     res.send(JSON.stringify(filteredResult));
   } catch (e) {
     console.error(e);

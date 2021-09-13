@@ -4,7 +4,6 @@ import { okay } from "../server/helpers";
 app.get("/", (req, res) => {
   okay(async () => {
     let loggedIn = false;
-    console.log();
     if ((req as any).me) {
       // then we are logged in
       loggedIn = true;

@@ -8,7 +8,7 @@ app.post("/login", async (req, res) => {
   const username = req.body?.data?.username;
   const password = req.body?.data?.password;
   okay(async () => {
-    console.log(JSON.stringify(req.body, null, 2));
+    // console.log(JSON.stringify(req.body, null, 2));
     let bad = isEmpty("any", [username, password]);
     if (bad) {
       console.log("something is empty.");

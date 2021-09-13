@@ -158,10 +158,14 @@ export const fromNow = (date: Date) => {
   const timeAgoInSeconds = Math.floor(
     (new Date().valueOf() - new Date(date).valueOf()) / 1000
   );
-  const { interval, epoch } = getDuration(timeAgoInSeconds);
-  const suffix = interval === 1 ? "" : "s";
-  console.log(`${interval} ${epoch}${suffix} ago`);
-  return `${interval} ${epoch}${suffix} ago`;
+  let res = getDuration(timeAgoInSeconds);
+  if (res) {
+    const { interval, epoch } = getDuration(timeAgoInSeconds);
+    const suffix = interval === 1 ? "" : "s";
+    return `${interval} ${epoch}${suffix} ago`;
+  } else {
+    return "Just now";
+  }
 };
 
 // check if given string is valid uuid

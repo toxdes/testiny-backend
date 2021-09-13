@@ -1,10 +1,8 @@
-A backend for [testiny-web](https://github.com/toxdes/testiny-web).
+![GitHub](https://img.shields.io/github/license/toxdes/testiny-backend?style=for-the-badge)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/toxdes/testiny-backend?style=for-the-badge)
+![Lines of code](https://img.shields.io/tokei/lines/github/toxdes/testiny-backend?style=for-the-badge)
 
-#### Note
-
-Currently, this backend is deployed at: https://testiny-backend.herokuapp.com.
-
-However, if you still can't access it, then it means the free tier dynos are already consumed.
+Backend server written in NodeJS for [testiny-web](https://github.com/toxdes/testiny-web). checkout [`tech-stack`](#tech-stack) for quick overview of technologies used.
 
 # Quickstart
 
@@ -15,7 +13,7 @@ Clone this repo.
 ```sh
 $ npm i -g yarn # install yarn
 $ # make sure you have set up postgres, and have DATABASE_URL in .env
-$ yarn all # ckeckout package.json to know what it does
+$ yarn all # checkout package.json to know what it does
 ```
 
 #### 2. Heroku
@@ -43,7 +41,7 @@ $ yarn all # ckeckout package.json to know what it does
 
 # References
 
-1. https://likegeeks.com/linux-mail-server/#Linux_SMTP_server - want to try custom mail server for sending various mails - can't because my ISP doesn't provide me a static IP for free, and it takes a while to update DNS records every time I point my domain to the dynamic IP. Reverse DNS, and https'ing is needed otherwise Gmail doesn't even accept the mail (not even in the spam folder). I don't have a credit card, nor money, so can't buy a cheap vps either, so this is postponed until I find a solution.
+1. https://likegeeks.com/linux-mail-server/#Linux_SMTP_server - want to try custom mail server for sending various mails - can't because my ISP doesn't provide me a static IP for free, and it takes a while to update DNS records every time I point my domain to the dynamic IP. Reverse DNS, and https'ing is needed otherwise Gmail doesn't even accept the mail (not even in the spam folder). I don't have a credit card, nor money, so can't buy a cheap vps either, so this is postponed until I find a solution. (**UPDATE**: This is not possible even with AWS EC2 because GMail has blacklisted all the ip-addresses. I managed to run a SMTP server, but Gmail automatically rejects the mails (not even in spam :/) So, I'll have to rely on some SaaS service that provides this functionality, potentially AWS SnS.)
 
 2. https://wiki.archlinux.org/index.php/PostgreSQL - Guide for setting up postgresql locally. After you set it up successfully, edit the [`.env`](./.env) file and provide the database URL. Alternatively, you can use Heroku.
 
