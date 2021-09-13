@@ -1,6 +1,6 @@
 {
   "name": "testiny-backend",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "backend for my application, hopefully I finish this.",
   "main": "index.js",
   "repository": "https://github.com/toxdes/testiny-backend.git",
