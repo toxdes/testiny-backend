@@ -51,7 +51,6 @@ export const authenticateToken = (
   next: () => void
 ) => {
   const header = req.headers["authorization"];
-  console.log(header);
   const token = header?.split(" ")[1];
   if (!token || header?.split(" ")[0] !== "Bearer") {
     (req as any).user = undefined;

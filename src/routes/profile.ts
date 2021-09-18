@@ -260,8 +260,6 @@ app.post("/users/:username/edit", async (req, res) => {
   }
   const data = getValidFields(USER_FIELDS_ALLOWED_TO_EDIT, req.body.data);
   try {
-    console.log(me);
-
     await prisma.userProfile.upsert({
       create: {
         ...data,

@@ -11,7 +11,6 @@ app.post("/login", async (req, res) => {
     // console.log(JSON.stringify(req.body, null, 2));
     let bad = isEmpty("any", [username, password]);
     if (bad) {
-      console.log("something is empty.");
       res.send(err("Unexpected input, please apologize."));
       return;
     }

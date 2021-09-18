@@ -5,7 +5,6 @@ import { License, QuestionType, QuestionVisibility } from "@prisma/client";
 
 app.get("/questions/:id", async (req, res) => {
   const target_question_id = req.params?.id;
-  console.log("QID", target_question_id);
   let question;
   let key = isUUID(target_question_id) ? "questionId" : "id";
   // read only question
@@ -46,8 +45,6 @@ app.get("/questions/:id", async (req, res) => {
       createdAt: fromNow(question.createdAt),
       updatedAt: fromNow(question.updatedAt),
     };
-    console.log(resp);
-
     res.send(JSON.stringify(resp));
   } catch (e) {
     console.error(e);
