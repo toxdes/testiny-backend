@@ -1,7 +1,11 @@
 import express from "express";
 import cors from "cors";
 import { PrismaClient } from "@prisma/client";
-import { authenticateToken, delayResponse } from "./helpers";
+import {
+  authenticateToken,
+  delayResponse,
+  customResponseHeaders,
+} from "./helpers";
 import { DATABASE_URL } from "../config/constants";
 import rateLimit from "express-rate-limit";
 import dotenv from "dotenv";
@@ -19,6 +23,7 @@ app.set("trust proxy", 1);
 app.use(express.json());
 app.use(limiter);
 app.use(cors());
+app.use(customResponseHeaders);
 app.use(authenticateToken);
 app.use(delayResponse);
 import "../auth";

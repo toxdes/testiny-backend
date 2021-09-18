@@ -6,7 +6,8 @@ let PORT: number,
   JWT_SECRET: string,
   USER_FIELDS_ALLOWED_TO_EDIT: string[],
   ARTIFICIAL_DELAY_IN_MILLIS: number,
-  DATABASE_URL: string;
+  DATABASE_URL: string,
+  CUSTOM_RESPONSE_HEADERS: Record<string, string>;
 
 // salt rounds for bcrypt
 SALT_ROUNDS = 12;
@@ -28,7 +29,10 @@ if (process.env.ENV === "production") {
   JWT_SECRET = "super_secret_nuclear_missile_launch_codes";
   ARTIFICIAL_DELAY_IN_MILLIS = 0;
 }
-
+// Extra Response Headers
+CUSTOM_RESPONSE_HEADERS = {
+  "Content-Type": "application/json",
+};
 export {
   PORT,
   SALT_ROUNDS,
@@ -36,4 +40,5 @@ export {
   USER_FIELDS_ALLOWED_TO_EDIT,
   ARTIFICIAL_DELAY_IN_MILLIS,
   DATABASE_URL,
+  CUSTOM_RESPONSE_HEADERS,
 };

@@ -5,6 +5,7 @@ import { JWT_SECRET, ARTIFICIAL_DELAY_IN_MILLIS } from "../config/constants";
 import { prisma } from ".";
 
 import { Request, Response } from "express";
+import { CUSTOM_RESPONSE_HEADERS } from "../config/constants";
 
 /*
 Authentication - Identify who is Using the Application.
@@ -175,4 +176,15 @@ export const isUUID = (s: string): boolean => {
       "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
     )?.length > 0
   );
+};
+
+export const customResponseHeaders = (
+  req: Request,
+  res: Response,
+  next: () => void
+) => {
+  Object.keys(CUSTOM_RESPONSE_HEADERS).forEach((key: string) => {
+    res.header(key, CUSTOM_RESPONSE_HEADERS[key]);
+  });
+  next();
 };
