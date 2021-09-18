@@ -4,7 +4,10 @@ import { PrismaClient } from "@prisma/client";
 import { authenticateToken, delayResponse } from "./helpers";
 import { DATABASE_URL } from "../config/constants";
 import rateLimit from "express-rate-limit";
+import dotenv from "dotenv";
+const env_vars = dotenv.config();
 
+console.log("Environment Variables (from .env): ", env_vars);
 // TODO: Implement proper HTTP Status Codes
 // @body Currently, even if there's an error, we send the client status 200, and inform the user about the error, by sending field with error:true, and the error message. So, it's not utilizing the status codes such as 401, 405, 404 etc.
 export const app = express();

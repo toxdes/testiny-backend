@@ -8,12 +8,13 @@ Backend server written in NodeJS for [testiny-web](https://github.com/toxdes/tes
 
 #### 1. Local Server
 
-Clone this repo.
-
 ```sh
-$ npm i -g yarn # install yarn
+$ git clone https://github.com/toxdes/testiny-backend
+$ cd testiny-backend
+$ cp sample.env .env # and populate the values of .env file correctly
+$ npx yarn # or npm install
 $ # make sure you have set up postgres, and have DATABASE_URL in .env
-$ yarn all # checkout package.json to know what it does
+$ npx yarn all # checkout package.json to know what it does
 ```
 
 #### 2. Heroku
@@ -27,7 +28,8 @@ $ yarn all # checkout package.json to know what it does
    | ------------------------- | --------------------------------------- |
    | `ENV`                     | `production`                            |
    | `JWT_SECRET`              | `something_unguessable_secret_key_here` |
-   | `PROD_DATABASE_URL`       | `database_url_from_previous_step`       |
+   | `DATABASE_URL`            | `database_url_from_previous_step`       |
+   | `PORT`                    | `port_to_start_server_default_8000`     |
 
 # Tech stack
 
