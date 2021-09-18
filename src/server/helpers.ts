@@ -142,7 +142,9 @@ const epochs: EpochType[] = [
   ["second", 1],
 ];
 
-const getDuration = (timeAgoInSeconds: number) => {
+const getDuration = (
+  timeAgoInSeconds: number
+): { epoch: string; interval: number } | undefined => {
   for (let [name, seconds] of epochs) {
     const interval = Math.floor(timeAgoInSeconds / seconds);
     if (interval >= 1) {
@@ -160,7 +162,7 @@ export const fromNow = (date: Date) => {
   );
   let res = getDuration(timeAgoInSeconds);
   if (res) {
-    const { interval, epoch } = getDuration(timeAgoInSeconds);
+    const { interval, epoch } = res;
     const suffix = interval === 1 ? "" : "s";
     return `${interval} ${epoch}${suffix} ago`;
   } else {
@@ -170,11 +172,11 @@ export const fromNow = (date: Date) => {
 
 // check if given string is valid uuid
 export const isUUID = (s: string): boolean => {
-  return (
-    s.match(
-      "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
-    )?.length > 0
-  );
+  let res = s?.match(
+    "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+  )?.length;
+  if (!res) return false;
+  return res > 0;
 };
 
 export const customResponseHeaders = (

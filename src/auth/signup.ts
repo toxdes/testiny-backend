@@ -42,7 +42,7 @@ app.post("/signup", (req, res) => {
           token: generateToken(user.uuid),
         })
       );
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
       if (error.code && error.code === "P2002") {
         res.send(
