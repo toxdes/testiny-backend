@@ -12,7 +12,7 @@
     "build": "npx tsc",
     "start": "node dist/index.js",
     "clean": "bash scripts/clean-db.sh",
-    "initdb": "sudo systemctl start postgresql.service",
+    "initdb": "sudo systemctl start postgresql.service || sudo service postgresql start || sudo service postgresql restart",
     "gen": "npx prisma db push --preview-feature && npx prisma generate",
     "fake": "ts-node scripts/generateFakeData.ts",
     "studio": "npx prisma studio",

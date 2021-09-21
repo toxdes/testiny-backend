@@ -312,7 +312,7 @@ app.get("/users", async (req, res) => {
       "alreadyFollowing",
     ];
     let filteredResult = await Promise.all(
-      result.map(async (rec) => {
+      result.map(async (rec: any) => {
         let o: Record<string, string | number | boolean> = {};
         Object.keys(rec).forEach((key) => {
           if (allowedKeys.indexOf(key) > -1)
