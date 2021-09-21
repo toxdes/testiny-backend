@@ -1,5 +1,5 @@
 import { app, prisma } from "../server";
-import { err, fromNow, isUUID } from "../server/helpers";
+import { err, isUUID } from "../server/helpers";
 import { v4 as uuid } from "uuid";
 import { License, QuestionType, QuestionVisibility } from "@prisma/client";
 
@@ -42,8 +42,8 @@ app.get("/questions/:id", async (req, res) => {
 
     let resp = {
       ...question,
-      createdAt: fromNow(question.createdAt),
-      updatedAt: fromNow(question.updatedAt),
+      createdAt: question.createdAt,
+      updatedAt: question.updatedAt,
     };
     res.send(JSON.stringify(resp));
   } catch (e) {
@@ -141,8 +141,8 @@ app.get("/questions", async (req, res) => {
     let resp = result.map((rec) => {
       return {
         ...rec,
-        createdAt: fromNow(rec.createdAt),
-        updatedAt: fromNow(rec.updatedAt),
+        createdAt: rec.createdAt,
+        updatedAt: rec.updatedAt,
       };
     });
     res.send(JSON.stringify(resp));

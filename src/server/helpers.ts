@@ -129,47 +129,6 @@ export const delayResponse = (
   setTimeout(next, ARTIFICIAL_DELAY_IN_MILLIS);
 };
 
-// time in human readable format
-// https://stackoverflow.com/a/33487313/6027457 -> x days ago
-type EpochType = [string, number];
-
-const epochs: EpochType[] = [
-  ["year", 31536000],
-  ["month", 2592000],
-  ["day", 86400],
-  ["hour", 3600],
-  ["minute", 60],
-  ["second", 1],
-];
-
-const getDuration = (
-  timeAgoInSeconds: number
-): { epoch: string; interval: number } | undefined => {
-  for (let [name, seconds] of epochs) {
-    const interval = Math.floor(timeAgoInSeconds / seconds);
-    if (interval >= 1) {
-      return {
-        interval: interval,
-        epoch: name,
-      };
-    }
-  }
-};
-
-export const fromNow = (date: Date) => {
-  const timeAgoInSeconds = Math.floor(
-    (new Date().valueOf() - new Date(date).valueOf()) / 1000
-  );
-  let res = getDuration(timeAgoInSeconds);
-  if (res) {
-    const { interval, epoch } = res;
-    const suffix = interval === 1 ? "" : "s";
-    return `${interval} ${epoch}${suffix} ago`;
-  } else {
-    return "Just now";
-  }
-};
-
 // check if given string is valid uuid
 export const isUUID = (s: string): boolean => {
   let res = s?.match(
