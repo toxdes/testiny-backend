@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
 
-let sendEmailDemo = () => {
+const sendEmails = () => {
   let transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST_URL,
     port: 587,
@@ -10,15 +10,32 @@ let sendEmailDemo = () => {
       pass: process.env.SMTP_PASSWORD,
     },
   });
-
-  let info = transporter.sendMail({
+  let mailOptions = {
     from: '"Testiny" <no-reply@testiny.live>',
     to: "user@example.com",
     subject: "Testiny - Verify your email address",
-    text: "Hello. what?",
+    text: "Hello. what? ",
     html:
       '<b>Something here</b> <a target="_blank" href="https://testiny.live" rel="noopener">click here to verify your account.</a>',
-  });
-  console.log("Email sent!");
-  console.log(info);
+  };
+  // trying out the different ways the email should be handled
+  let info = transporter.sendMail(mailOptions);
+  console.log(`[SCRIPT] normal mail sent to ${mailOptions.to}`, info);
+  mailOptions.to = "success@simulator.amazonses.com";
+  info = transporter.sendMail(mailOptions);
+  console.log(`[SCRIPT] success mail sent to ${mailOptions.to}`, info);
+  mailOptions.to = "bounce@simulator.amazonses.com";
+  info = transporter.sendMail(mailOptions);
+  console.log(`[SCRIPT] bounce mail sent to ${mailOptions.to}`, info);
+  mailOptions.to = "complaint@simulator.amazonses.com";
+  info = transporter.sendMail(mailOptions);
+  console.log(`[SCRIPT] complaint mail sent to ${mailOptions.to}`, info);
+  mailOptions.to = "ooto@simulator.amazonses.com";
+  info = transporter.sendMail(mailOptions);
+  console.log(`[SCRIPT] ooto mail sent to ${mailOptions.to}`, info);
+  mailOptions.to = "suppressionlist@simulator.amazonses.com";
+  info = transporter.sendMail(mailOptions);
+  console.log(`[SCRIPT] suppresionlist mail sent to ${mailOptions.to}`, info);
 };
+
+sendEmails();

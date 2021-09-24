@@ -7,7 +7,6 @@ import {
   customResponseHeaders,
 } from "./helpers";
 import rateLimit from "express-rate-limit";
-import "../../scripts/emailTest";
 // TODO: Implement proper HTTP Status Codes
 // @body Currently, even if there's an error, we send the client status 200, and inform the user about the error, by sending field with error:true, and the error message. So, it's not utilizing the status codes such as 401, 405, 404 etc.
 export const app = express();
