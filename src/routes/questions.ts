@@ -2,6 +2,7 @@ import { app, prisma } from "../server";
 import { err, isUUID } from "../server/helpers";
 import { v4 as uuid } from "uuid";
 import { License, QuestionType, QuestionVisibility } from "@prisma/client";
+import { ParsedQs } from "qs";
 
 app.get("/questions/:id", async (req, res) => {
   const target_question_id = req.params?.id;
@@ -107,6 +108,12 @@ app.post("/questions/create", async (req, res) => {
   }
 });
 
+class QuestionHelpers {
+  static getDifficulty = (q: ParsedQs) => {
+    // idk why it's adding ? to first param. need to investigate
+    console.log("difficulty:", q);
+  };
+}
 // /questions?page=4&n=5 means give 5 records, 16 to 21 in this case, if they exist
 app.get("/questions", async (req, res) => {
   try {
@@ -114,6 +121,7 @@ app.get("/questions", async (req, res) => {
     if (!records) records = 20;
     let skipped = Number(req.query.page) * records;
     if (!skipped) skipped = 0;
+    let difficulty = QuestionHelpers.getDifficulty(req.query);
     let result = await prisma.question.findMany({
       skip: skipped,
       take: records,
