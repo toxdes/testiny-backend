@@ -14,7 +14,7 @@ app.post("/aws/:service", (req, res) => {
       req.headers["x-amz-sns-message-type"] === "SubscriptionConfirmation"
     ) {
       // handle subscription confirmation
-      console.log("[SNS SubscriptionConfirmation]", req.body);
+      console.log("[SNS SubscriptionConfirmation]", req.body.Token);
     }
     res.status(200).send(
       JSON.stringify({

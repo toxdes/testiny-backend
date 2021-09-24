@@ -16,12 +16,19 @@ const limiter = rateLimit({
   max: 100,
 });
 app.set("trust proxy", 1);
+app.use(function (req, res, next) {
+  if (req.get("x-amz-sns-message-type")) {
+    req.headers["content-type"] = "application/json"; //IMPORTANT, otherwise content-type is text for topic confirmation reponse, and body is empty
+  }
+  next();
+});
 app.use(express.json());
 app.use(limiter);
 app.use(cors());
 app.use(customResponseHeaders);
 app.use(authenticateToken);
 app.use(delayResponse);
+
 import "../auth";
 import "../routes";
 
