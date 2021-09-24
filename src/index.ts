@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { PORT } from "./config/constants";
 import { app } from "./server/index";
 

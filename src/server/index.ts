@@ -6,12 +6,8 @@ import {
   delayResponse,
   customResponseHeaders,
 } from "./helpers";
-import { DATABASE_URL } from "../config/constants";
 import rateLimit from "express-rate-limit";
-import dotenv from "dotenv";
-const env_vars = dotenv.config();
 import "../../scripts/emailTest";
-console.log("Environment Variables (from .env): ", env_vars);
 // TODO: Implement proper HTTP Status Codes
 // @body Currently, even if there's an error, we send the client status 200, and inform the user about the error, by sending field with error:true, and the error message. So, it's not utilizing the status codes such as 401, 405, 404 etc.
 export const app = express();
@@ -33,6 +29,6 @@ import "../routes";
 // overriding DATABASE_URL in case of production
 export const prisma = new PrismaClient({
   datasources: {
-    db: { url: DATABASE_URL },
+    db: { url: process.env.DATABASE_URL },
   },
 });

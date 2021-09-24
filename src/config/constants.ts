@@ -1,6 +1,3 @@
-import env from "dotenv";
-env.config();
-
 let PORT: number,
   SALT_ROUNDS: number,
   JWT_SECRET: string,
