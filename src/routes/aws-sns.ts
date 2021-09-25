@@ -12,9 +12,9 @@ const handleMessage = async (message: any) => {
             recipientEmail: rec.emailAddress,
             complaintFeedbackType: message.complaint.complaintFeedbackType,
             arrivalDate: message.complaint.arrivalDate,
-            messageId: message.complaint.mail.messageId,
-            sourceArn: message.complaint.mail.sourceArn,
-            sourceIp: message.complaint.mail.sourceIp,
+            messageId: message.mail.messageId,
+            sourceArn: message.mail.sourceArn,
+            sourceIp: message.mail.sourceIp,
           },
         });
       });
@@ -29,11 +29,12 @@ const handleMessage = async (message: any) => {
         await prisma.awsEmailBounces.create({
           data: {
             bounceType: message.bounce.bounceType,
+            bounceSubType: message.bounce.bounceSubType,
             recipientEmail: rec.emailAddress,
             bouncedAt: message.timestamp,
-            messageId: message.bounce.mail.messageId,
-            sourceIp: message.bounce.mail.sourceIp,
-            sourceArn: message.bounce.mail.sourceArn,
+            messageId: message.mail.messageId,
+            sourceIp: message.mail.sourceIp,
+            sourceArn: message.mail.sourceArn,
           },
         });
       });
