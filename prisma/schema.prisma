@@ -101,3 +101,25 @@ model QuestionTags {
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @default(now())
 }
+
+model AwsEmailBounces {
+  id             Int       @id @default(autoincrement())
+  bounceType     String?
+  bounceSubType  String?
+  recipientEmail String?
+  bouncedAt      DateTime?
+  messageId      String?
+  sourceIp       String?
+  sourceArn      String?
+}
+
+model AwsEmailComplaints {
+  id                    Int       @id @default(autoincrement())
+  complaintSubType      String?
+  recipientEmail        String?
+  complaintFeedbackType String?
+  arrivalDate           DateTime?
+  messageId             String?
+  sourceIp              String?
+  sourceArn             String?
+}
