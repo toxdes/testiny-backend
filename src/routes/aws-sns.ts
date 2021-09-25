@@ -2,7 +2,7 @@ import { err } from "../server/helpers";
 import { app, prisma } from "../server";
 
 const handleMessage = async (message: any) => {
-  if (message.notificationType === "Complaint") {
+  if (message.eventType === "Complaint") {
     const complainedRecipients = message.complaint.complainedRecipients;
     try {
       complainedRecipients.forEach(async (rec: any) => {
@@ -22,7 +22,7 @@ const handleMessage = async (message: any) => {
       console.error("Failed to save email complaint.");
       console.error(e);
     }
-  } else if (message.notificationType === "Bounce") {
+  } else if (message.eventType === "Bounce") {
     const bouncedRecipients = message.bounce.bouncedRecipients;
     try {
       bouncedRecipients.forEach(async (rec: any) => {
@@ -49,7 +49,7 @@ app.post("/aws/:service", (req, res) => {
   if (service === "handle-email-complaints") {
     if (req.headers["x-amz-sns-message-type"] === "Notification") {
       // handle notification
-      let message = req.body.Message;
+      let message = req.body;
       handleMessage(message);
     } else if (
       req.headers["x-amz-sns-message-type"] === "SubscriptionConfirmation"

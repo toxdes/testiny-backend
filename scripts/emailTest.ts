@@ -18,6 +18,9 @@ const sendEmails = async () => {
     text: "Hello. what? ",
     html:
       '<b>Something here</b> <a target="_blank" href="https://testiny.live" rel="noopener">click here to verify your account.</a>',
+    headers: {
+      "X-SES-CONFIGURATION-SET": "test",
+    },
   };
   // trying out the different ways the email should be handled
   let info = await transporter.sendMail({ ...mailOptions });
