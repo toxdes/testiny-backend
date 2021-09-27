@@ -80,7 +80,7 @@ const generateQuestions = async (users: UserType[]) => {
           },
           tags: {
             create: {
-              tagName: getRandom(["easy", "medium", "hard"]),
+              tagName: getRandom(["maths", "science", "social-services"]),
             },
           },
         },

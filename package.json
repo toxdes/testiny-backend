@@ -17,7 +17,8 @@
     "fake": "ts-node scripts/generateFakeData.ts",
     "studio": "npx prisma studio",
     "all": "yarn initdb && yarn gen && yarn dev",
-    "test": "npx jest --coverage --all --color --watch"
+    "test": "npx jest --coverage --all --color --watch",
+    "kill": "fuser -k 8000/tcp"
   },
   "devDependencies": {
     "@tsconfig/recommended": "^1.0.1",

@@ -4,7 +4,7 @@ import { err, getValidFields } from "../server/helpers";
 
 app.get("/users/:username", async (req, res) => {
   const target_username = req.params?.username;
-  let user, userProfile, myProfile;
+  let user;
   const me = (req as any).me;
   // console.log("target username", target_username);
 
@@ -13,16 +13,14 @@ app.get("/users/:username", async (req, res) => {
       where: {
         username: target_username,
       },
+      include: {
+        profile: true,
+      },
     });
     if (!user) {
       res.send(err("No such user exists."));
       return;
     }
-    userProfile = await prisma.userProfile.findUnique({
-      where: {
-        userId: user?.id,
-      },
-    });
   } catch (e) {
     console.error(e);
     res.send(err("Internal server error, apologies."));
@@ -34,8 +32,9 @@ app.get("/users/:username", async (req, res) => {
       JSON.stringify({
         username: user.username,
         emailVerified: user.emailVerified,
-        name: userProfile?.name,
-        bio: userProfile?.bio,
+        name: user.profile?.name,
+        bio: user.profile?.bio,
+        avatar: user.profile?.avatar,
         ownProfile: false,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
@@ -49,20 +48,16 @@ app.get("/users/:username", async (req, res) => {
     if (user?.username === me?.username) {
       // if yes, then the user is requesting his own profile page,
       // we may allow him to edit his profile
-      myProfile = await prisma.userProfile.findUnique({
-        where: {
-          userId: me?.id,
-        },
-      });
       res.send(
         JSON.stringify({
           username: me?.username,
           emailVerified: me?.emailVerified,
-          name: myProfile?.name,
-          bio: myProfile?.bio,
+          name: user.profile?.name,
+          bio: user.profile?.bio,
+          avatar: user.profile?.avatar,
           ownProfile: true,
-          createdAt: me?.createdAt,
-          updatedAt: me?.updatedAt,
+          createdAt: user?.createdAt,
+          updatedAt: user?.updatedAt,
           followingCount: user.followingCount,
           followersCount: user.followersCount,
           alreadyFollowing: false,
@@ -81,8 +76,8 @@ app.get("/users/:username", async (req, res) => {
         JSON.stringify({
           username: user?.username,
           emailVerified: user?.emailVerified,
-          name: userProfile?.name,
-          bio: userProfile?.bio,
+          name: user.profile?.name,
+          bio: user.profile?.bio,
           ownProfile: false,
           createdAt: user?.createdAt,
           updatedAt: user?.updatedAt,
@@ -302,7 +297,6 @@ app.get("/users", async (req, res) => {
     const allowedKeys = [
       "username",
       "profile",
-      "email",
       "emailVerified",
       "uuid",
       "createdAt",
